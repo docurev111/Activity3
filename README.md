@@ -58,13 +58,4 @@ npm run dev
 3. **Add Books**: Fill in book title, select author and category, then submit
 4. **Edit/Delete**: Use the buttons next to each book to modify or remove entries
 
-##  Activity 3: Bookshelf API + UI
-
-This project fulfills the requirements for Activity 3:
-- Backend with complete CRUD operations for books, authors, and categories
-- Frontend UI for viewing and managing bookshelf records
-- Full API documentation via Swagger
-
 ---
-
-Built with  using modern web technologies
