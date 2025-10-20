@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import '../styles/BookList.css';
 
 function BookList() {
   const [books, setBooks] = useState([]);
@@ -102,69 +103,135 @@ function BookList() {
   };
 
   return (
-    <div>
-      <h1>Bookshelf</h1>
+    <div className="bookshelf-container">
+      <div className="bookshelf-header">
+        <h1>Bookshelf</h1>
+        <p>Manage your digital library with ease</p>
+      </div>
+
       {errorMessage && (
-        <div style={{ color: 'red', padding: '10px', border: '1px solid red', marginBottom: '10px' }}>
+        <div className="error-message">
           {errorMessage}
         </div>
       )}
-      <ul>
-        {books.map(book => (
-          <li key={book.id}>
-            {book.title} by {book.author.name} in {book.category.name}
-            <button onClick={() => handleEdit(book)}>Edit</button>
-            <button onClick={() => handleDelete(book.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          required
-        />
-        <select
-          value={form.authorId}
-          onChange={(e) => setForm({ ...form, authorId: e.target.value })}
-          required
-        >
-          <option value="">Select Author</option>
-          {authors.map(author => (
-            <option key={author.id} value={author.id}>{author.name}</option>
-          ))}
-        </select>
-        <select
-          value={form.categoryId}
-          onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-          required
-        >
-          <option value="">Select Category</option>
-          {categories.map(category => (
-            <option key={category.id} value={category.id}>{category.name}</option>
-          ))}
-        </select>
-        <button type="submit">{editingId ? 'Update' : 'Add'} Book</button>
-        {editingId && <button type="button" onClick={handleCancel}>Cancel</button>}
-      </form>
-      <h2>Add Author</h2>
-      <input
-        type="text"
-        placeholder="Author Name"
-        value={newAuthor}
-        onChange={(e) => setNewAuthor(e.target.value)}
-      />
-      <button onClick={handleAddAuthor}>Add Author</button>
-      <h2>Add Category</h2>
-      <input
-        type="text"
-        placeholder="Category Name"
-        value={newCategory}
-        onChange={(e) => setNewCategory(e.target.value)}
-      />
-      <button onClick={handleAddCategory}>Add Category</button>
+
+      <div className="content-grid">
+        <div className="card">
+          <h2>Books Collection</h2>
+          {books.length === 0 ? (
+            <div className="empty-state">No books yet. Add your first book below!</div>
+          ) : (
+            <ul className="books-list">
+              {books.map(book => (
+                <li key={book.id}>
+                  <div className="book-info">
+                    <div className="book-title">{book.title}</div>
+                    <div className="book-meta">
+                      by {book.author.name} • {book.category.name}
+                    </div>
+                  </div>
+                  <div className="book-actions">
+                    <button className="btn-edit" onClick={() => handleEdit(book)}>Edit</button>
+                    <button className="btn-delete" onClick={() => handleDelete(book.id)}>Delete</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <h3>{editingId ? 'Edit Book' : 'Add New Book'}</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Book Title</label>
+              <input
+                type="text"
+                placeholder="Enter book title..."
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Author</label>
+              <select
+                value={form.authorId}
+                onChange={(e) => setForm({ ...form, authorId: e.target.value })}
+                required
+              >
+                <option value="">Select Author</option>
+                {authors.map(author => (
+                  <option key={author.id} value={author.id}>{author.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Category</label>
+              <select
+                value={form.categoryId}
+                onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="form-actions">
+              <button type="submit" className="btn-primary">
+                {editingId ? 'Update Book' : 'Add Book'}
+              </button>
+              {editingId && (
+                <button type="button" className="btn-cancel" onClick={handleCancel}>
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <div className="card quick-add-section">
+            <h2>Quick Add Author</h2>
+            <div className="quick-add-form">
+              <input
+                type="text"
+                placeholder="Author name..."
+                value={newAuthor}
+                onChange={(e) => setNewAuthor(e.target.value)}
+              />
+              <button className="btn-secondary" onClick={handleAddAuthor}>
+                Add
+              </button>
+            </div>
+            {authors.length > 0 && (
+              <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666' }}>
+                <strong>Authors:</strong> {authors.map(a => a.name).join(', ')}
+              </div>
+            )}
+          </div>
+
+          <div className="card quick-add-section">
+            <h2>Quick Add Category</h2>
+            <div className="quick-add-form">
+              <input
+                type="text"
+                placeholder="Category name..."
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <button className="btn-secondary" onClick={handleAddCategory}>
+                Add
+              </button>
+            </div>
+            {categories.length > 0 && (
+              <div style={{ marginTop: '15px', fontSize: '0.9rem', color: '#666' }}>
+                <strong>Categories:</strong> {categories.map(c => c.name).join(', ')}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
